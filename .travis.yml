@@ -19,9 +19,8 @@ cache:
   directories:
     - /home/travis/.opam/
 
-cache:
-  directories:
-    - /home/travis/.opam/
+addons:
+  artifacts: true
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install protobuf ; fi
@@ -49,4 +48,7 @@ script:
     opam install num ;
     ./configure --sosa-num && make clean test bench distrib clean ;
     opam install zarith ;
-    ./configure --sosa-zarith && make clean test bench distrib clean ;
+    ./configure --sosa-zarith && make clean test bench distrib clean
+
+after_success:
+  -  ./configure && make clean distrib && tar -zcvf distrib.tar.gz distribution ;
